@@ -1,6 +1,10 @@
 FROM ubuntu:xenial
 
 # Apt packages
+RUN apt-get update && \
+    apt-get install -qy software-properties-common && \
+    apt-add-repository -y ppa:brightbox/ruby-ng
+
 RUN dpkg --add-architecture i386 && apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -qy \
     git nasm  python \
@@ -18,10 +22,10 @@ RUN dpkg --add-architecture i386 && apt-get update && \
     strace \
     cmake \
     radare2 \
-    python-capstone \
+    #python-capstone \
     socat \
     netcat \
-    ruby \
+    ruby2.6 \
     vim \
     tmux \
     libc6:i386 libncurses5:i386 libstdc++6:i386 \
@@ -29,7 +33,10 @@ RUN dpkg --add-architecture i386 && apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* 
 # python/ruby packages & gdb-plugin
+RUN pip install --upgrade pip
+
 RUN pip install --no-cache-dir pwntools && \
+    pip install --no-cache-dir ropgadget && \
     gem install one_gadget && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
